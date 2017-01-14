@@ -33,6 +33,7 @@
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
     openvpn_use_pam: no
+    openvpn_user: openvpn
     # NOTE: 8 clients max
     openvpn_clients: [thinkpad]
     openvpn_server_options:
