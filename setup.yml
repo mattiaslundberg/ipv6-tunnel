@@ -38,6 +38,8 @@
     openvpn_clients:
       - local
     openvpn_server_options:
+     - tun-ipv6
+     - push tun-ipv6
      - push "dhcp-option DNS 8.8.8.8"
      - push "redirect-gateway def1 bypass-dhcp"
      - push "route-ipv6 2000::/3"
