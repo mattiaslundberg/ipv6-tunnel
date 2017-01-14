@@ -7,6 +7,7 @@
     - include_vars: vars.yml
     - name: Create or Start droplet
       digital_ocean:
+        unique_name: yes
         state: present
         command: droplet
         name: "{{ droplet_name }}"

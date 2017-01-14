@@ -5,8 +5,9 @@
 
   tasks:
     - include_vars: vars.yml
-    - name: Create or Start droplet
+    - name: Destroy droplet
       digital_ocean:
-        state: deleted
+        unique_name: yes
+        state: absent
         command: droplet
         name: "{{ droplet_name }}"
