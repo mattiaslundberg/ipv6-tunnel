@@ -26,3 +26,9 @@
     content: "{{ ipv6_address[:-1] }}{{ item.0 + 2 }}\n"
     dest: /etc/openvpn/config/{{ item.1 }}
   with_indexed_items: "{{ openvpn_clients }}"
+
+- name: Install sudoers
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers
+    validate: "/usr/sbin/visudo -cf %s"

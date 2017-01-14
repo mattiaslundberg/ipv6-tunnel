@@ -1,0 +1,12 @@
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+
+# Members of the admin group may gain root privileges
+%admin ALL=(ALL) ALL
+
+# Allow members of group sudo to execute any command
+%sudo   ALL=(ALL:ALL) ALL
+
+Defaults:openvpn env_keep += "ifconfig_pool_remote_ip common_name"
+openvpn ALL=NOPASSWD: /etc/openvpn/server_client_connect.sh
+openvpn ALL=NOPASSWD: /etc/openvpn/server_client_disconnect.sh
