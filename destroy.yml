@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - include_vars: vars.yml
+    - name: Create or Start droplet
+      digital_ocean:
+        state: deleted
+        command: droplet
+        name: "{{ droplet_name }}"
