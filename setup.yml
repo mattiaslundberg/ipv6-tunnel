@@ -27,10 +27,6 @@
         groups: do
       when: do.droplet is defined
 
-    - name: debug
-      debug:
-        msg: "{{ do }}"
-
 - hosts: do
   remote_user: root
 
