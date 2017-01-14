@@ -1,0 +1,36 @@
+---
+- name: Enable forward
+  sysctl:
+    name: "{{ item }}"
+    value: 1
+    sysctl_set: yes
+  with_items:
+    - net.ipv4.ip_forward
+    - net.ipv6.conf.all.forwarding
+    - net.ipv6.conf.all.proxy_ndp
+
+- name: Disable redirects
+  sysctl:
+    name: "{{ item }}"
+    value: 1
+    sysctl_set: yes
+  with_items:
+    - net.ipv4.conf.all.accept_redirects
+    - net.ipv6.conf.all.accept_redirects
+    - net.ipv4.conf.all.send_redirects
+
+- name: Enable ipv4 routing
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth0
+    jump: MASQUERADE
+
+- name: Save iptables rules
+  shell: iptables-save > /etc/iptables.rules
+
+- name: Create restore script
+  template:
+    dest: /etc/network/if-up.d/iptables
+    src: iptables.j2
+    mode: u=rwx,g=rx,o=rx
