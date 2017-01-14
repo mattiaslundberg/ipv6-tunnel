@@ -18,13 +18,14 @@
           - "06:2a:1e:25:ae:ee:c9:6b:96:58:ae:8e:91:36:81:a3"
         backups_enabled: no
         ipv6: yes
-      register: do
+      register: droplets
 
     - name: Add new host to inventory
       add_host:
-        name: "{{ do.droplet.ip_address }}"
+        name: "{{ droplets.droplet.ip_address }}"
         groups: do
-      when: do.droplet is defined
+        ipv6_address: "{{ droplets.droplet.networks.v6[0].ip_address }}"
+      when: droplets.droplet is defined
 
 - hosts: do
   remote_user: root
