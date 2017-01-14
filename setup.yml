@@ -38,6 +38,10 @@
     openvpn_server_options:
      - push "dhcp-option DNS 8.8.8.8"
      - push "redirect-gateway def1 bypass-dhcp"
+     - push "route-ipv6 2000::/3"
+     - script-security 2
+     - client-connect "/usr/bin/sudo -u root /etc/openvpn/server_client_connect.sh"
+     - client-disconnect "/usr/bin/sudo -u root /etc/openvpn/server_client_disconnect.sh"
 
   roles:
     - Stouts.openvpn
