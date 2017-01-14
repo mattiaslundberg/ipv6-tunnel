@@ -35,7 +35,8 @@
     openvpn_use_pam: no
     openvpn_user: openvpn
     # NOTE: 8 clients max
-    openvpn_clients: [thinkpad]
+    openvpn_clients:
+      - local
     openvpn_server_options:
      - push "dhcp-option DNS 8.8.8.8"
      - push "redirect-gateway def1 bypass-dhcp"
