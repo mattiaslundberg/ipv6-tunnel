@@ -1,0 +1,28 @@
+---
+- name: Create openvpn user
+  user:
+    name: openvpn
+    shell: /bin/false
+    system: yes
+
+- name: Create client config directory
+  file:
+    state: directory
+    name: /etc/openvpn/config/
+
+- name: Install scripts
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/openvpn/{{ item }}
+    owner: openvpn
+    mode: u=rwx,g=,o=
+  with_items:
+    - server_client_connect.sh
+    - server_client_disconnect.sh
+
+# NOTE: This is limited to 8 clients
+- name: Write config
+  copy:
+    content: "{{ ipv6_address[:-1] }}{{ item.0 + 2 }}\n"
+    dest: /etc/openvpn/config/{{ item.1 }}
+  with_indexed_items: "{{ openvpn_clients }}"

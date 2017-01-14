@@ -33,6 +33,7 @@
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
     openvpn_use_pam: no
+    # NOTE: 8 clients max
     openvpn_clients: [thinkpad]
     openvpn_server_options:
      - push "dhcp-option DNS 8.8.8.8"
@@ -41,20 +42,21 @@
   roles:
     - Stouts.openvpn
     - routing
+    - ipv6
 
   pre_tasks:
     - name: Wait for port 22 to become available.
       local_action: "wait_for port=22 host={{ inventory_hostname }}"
 
-  tasks:
+  post_tasks:
     - name: Download certs
       fetch:
         src: /etc/openvpn/keys/{{ item }}.zip
         dest: keys/
         flat: yes
-        fail_on_missing: yes
       with_items: "{{ openvpn_clients }}"
 
+  tasks:
     - name: Start openvpn server
       systemd:
         name: openvpn@server

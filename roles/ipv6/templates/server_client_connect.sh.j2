@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Check client variables
+if [ -z "$ifconfig_pool_remote_ip" ] || [ -z "$common_name" ]; then
+        echo "Missing environment variable."
+        exit 1
+fi
+
+echo "Client $common_name connected" > /tmp/mylog.log
+
+# Create proxy rule
+/sbin/ip -6 neigh add proxy $(cat /etc/openvpn/config/$common_name) dev eth0

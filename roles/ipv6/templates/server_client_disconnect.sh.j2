@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Check client variables
+if [ -z "$ifconfig_pool_remote_ip" ] || [ -z "$common_name" ]; then
+        echo "Missing environment variable."
+        exit 1
+fi
+
+# Delete proxy rule
+/sbin/ip -6 neigh del proxy $(cat /etc/openvpn/config/${common_name}) dev eth0
