@@ -18,7 +18,6 @@
           - "06:2a:1e:25:ae:ee:c9:6b:96:58:ae:8e:91:36:81:a3"
         backups_enabled: no
         ipv6: yes
-        unique_name: yes
       register: do
 
     - name: Add new host to inventory
