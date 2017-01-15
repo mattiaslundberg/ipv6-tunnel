@@ -1,2 +1,6 @@
 ---
 droplet_name: tunnel.mlundberg.se
+# NOTE: 8 clients max
+# local is required for run.sh script
+openvpn_clients:
+  - local

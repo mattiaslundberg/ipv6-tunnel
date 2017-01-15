@@ -36,9 +36,6 @@
     openvpn_use_pam: no
     openvpn_user: openvpn
     openvpn_client_config_dir: /etc/openvpn/config/
-    # NOTE: 8 clients max
-    openvpn_clients:
-      - local
     openvpn_server_options:
       - server-ipv6 "{{ ipv6_address }}/112"
       - push "dhcp-option DNS 8.8.8.8"
@@ -56,6 +53,8 @@
     - ipv6
 
   pre_tasks:
+    - include_vars: vars.yml
+
     - name: Wait for port 22 to become available.
       local_action: "wait_for port=22 host={{ inventory_hostname }}"
 
