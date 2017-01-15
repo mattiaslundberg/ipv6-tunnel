@@ -2,6 +2,7 @@
 
 ansible-playbook setup.yml
 
-cd keys && unzip local.zip
+cd keys
+unzip local.zip
 
-cd keys && sudo openvpn --config local.ovpn
+sudo openvpn --config local.ovpn
