@@ -1,4 +1,5 @@
 #!/bin/sh
+echo "hello $common_name" >> /tmp/hello.log
 
 # Check client variables
 if [ -z "$ifconfig_pool_remote_ip" ] || [ -z "$common_name" ]; then
@@ -6,7 +7,5 @@ if [ -z "$ifconfig_pool_remote_ip" ] || [ -z "$common_name" ]; then
         exit 1
 fi
 
-echo "Client $common_name connected" > /tmp/mylog.log
-
 # Create proxy rule
-/sbin/ip -6 neigh add proxy $(cat /etc/openvpn/config/$common_name) dev eth0
+/sbin/ip -6 neigh add proxy $(cat /etc/openvpn/addrs/$common_name) dev eth0

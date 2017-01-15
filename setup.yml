@@ -25,6 +25,7 @@
         name: "{{ droplets.droplet.ip_address }}"
         groups: do
         ipv6_address: "{{ droplets.droplet.networks.v6[0].ip_address }}"
+        ipv6_network: "{{ droplets.droplet.networks.v6[0].gateway }}/{{ droplets.droplet.networks.v6[0].netmask }}"
       when: droplets.droplet is defined
 
 - hosts: do
@@ -34,18 +35,20 @@
     ansible_python_interpreter: "/usr/bin/python3"
     openvpn_use_pam: no
     openvpn_user: openvpn
+    openvpn_client_config_dir: /etc/openvpn/config/
     # NOTE: 8 clients max
     openvpn_clients:
       - local
     openvpn_server_options:
-     - tun-ipv6
-     - push tun-ipv6
-     - push "dhcp-option DNS 8.8.8.8"
-     - push "redirect-gateway def1 bypass-dhcp"
-     - push "route-ipv6 2000::/3"
-     - script-security 2
-     - client-connect "/usr/bin/sudo -u root /etc/openvpn/server_client_connect.sh"
-     - client-disconnect "/usr/bin/sudo -u root /etc/openvpn/server_client_disconnect.sh"
+      - server-ipv6 "{{ ipv6_address }}/112"
+      - push "dhcp-option DNS 8.8.8.8"
+      - push "redirect-gateway def1 bypass-dhcp"
+      - push "redirect-gateway ipv6"
+      - push "route-ipv6 {{ ipv6_network }}"
+      - push "route-ipv6 2000::/3"
+      - script-security 2
+      - client-connect "/usr/bin/sudo -u root /etc/openvpn/server_client_connect.sh"
+      - client-disconnect "/usr/bin/sudo -u root /etc/openvpn/server_client_disconnect.sh"
 
   roles:
     - Stouts.openvpn
@@ -56,7 +59,19 @@
     - name: Wait for port 22 to become available.
       local_action: "wait_for port=22 host={{ inventory_hostname }}"
 
+    - name: Create openvpn user
+      user:
+        name: openvpn
+        shell: /bin/false
+        system: yes
+
   post_tasks:
+    - name: Remove old certs
+      file:
+        name: keys/{{ item }}.zip
+        state: absent
+      with_items: "{{ openvpn_clients }}"
+
     - name: Download certs
       fetch:
         src: /etc/openvpn/keys/{{ item }}.zip
