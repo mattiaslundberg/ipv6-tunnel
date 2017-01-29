@@ -28,6 +28,13 @@
         ipv6_network: "{{ droplets.droplet.networks.v6[0].gateway }}/{{ droplets.droplet.networks.v6[0].netmask }}"
       when: droplets.droplet is defined
 
+    - name: Wait for port 22 to become available.
+      local_action:
+        module: wait_for
+        port: 22
+        host: "{{ droplets.droplet.ip_address }}"
+      when: droplets.droplet is defined
+
 - hosts: do
   remote_user: root
 
@@ -54,9 +61,6 @@
 
   pre_tasks:
     - include_vars: vars.yml
-
-    - name: Wait for port 22 to become available.
-      local_action: "wait_for port=22 host={{ inventory_hostname }}"
 
     - name: Create openvpn user
       user:
